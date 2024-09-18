@@ -2,6 +2,11 @@
 const express = require('express');
 const router = express.Router();
 
+// Import API router
+const apiRouter = require('./api');
+router.use('/api', apiRouter);
+
+// test route with cookies
 router.get('/hello/world', function(req, res) {
   res.cookie('XSRF-TOKEN', req.csrfToken());
   res.send('Hello World!');
