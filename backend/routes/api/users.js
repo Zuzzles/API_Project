@@ -41,6 +41,8 @@ router.post("/", validateSignup, async (req, res) => {
 
     const safeUser = {                                      // Create a safe user object
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
     };

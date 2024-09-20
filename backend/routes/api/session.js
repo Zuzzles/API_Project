@@ -46,6 +46,8 @@ router.post("/", validateLogin, async (req, res, next) => {
     // If a user is found, call the setTokenCookie function and return the user
     const safeUser = {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
     };
@@ -63,6 +65,8 @@ router.get("/", (req, res) => {
     if (user) {
         const safeUser = {
           id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
           email: user.email,
           username: user.username,
         };
