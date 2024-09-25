@@ -136,6 +136,36 @@ router.get("/:spotId", async (req, res, next) => {
     }
 })
 
+//Edit a Spot
+router.put("/:spotId", async (req, res, next) => {
+  const { address, city, state, country, lat, lng, name, description, price } = req.body;
+  const spotId = req.params.spotId;
+
+  // Find the spot
+
+  const spot = await Spot.findByPk(spotId);
+
+  //Check if the spot exists
+
+  if (spot) {
+    const updatedSpot = await spot.update({
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+  });
+  return res.json(updatedSpot);
+} else {
+  res.statusCode = 404;
+  return res.json({ message: "Spot couldn't be found" })
+}
+});
+
 // Get all Spots
 router.get("/", async (req, res, next) => {
     const spots = await Spot.findAll();
