@@ -1,8 +1,5 @@
 // backend/routes/api/index.js
 const router = require('express').Router();
-const sessionRouter = require('./session.js');
-const usersRouter = require('./users.js');
-const spotsRouter = require('./spots.js')
 const { restoreUser } = require("../../utils/auth.js");
 
 // Connect restoreUser middleware to the API router
@@ -13,9 +10,13 @@ router.use(restoreUser);
   // If current user session is not valid, set req.user to null
 router.use(restoreUser);
 
-router.use('/session', sessionRouter);
-router.use('/users', usersRouter);
-router.use('/spots', spotsRouter);
+router.use('/session', require('./session.js'));
+router.use('/users', require('./users.js'));
+router.use('/spots', require('./spots.js'));
+router.use('/bookings', require('./bookings.js'));
+router.use('/review-images', require('./review-images.js'));
+router.use('/reviews', require('./reviews.js'));
+router.use('/spot-images', require('./spot-images.js'));
 
 // test route
 router.post('/test', function(req, res) {
