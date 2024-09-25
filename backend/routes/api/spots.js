@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser } = require('../../utils/auth');
-const { Spot, User } = require('../../db/models');
+const { SpotImage, Spot, User } = require('../../db/models');
 
 const router = express.Router();
 
@@ -30,6 +30,39 @@ const validateNewSpot = [
       .withMessage('Price per day must be a positive number'),
     handleValidationErrors
 ];
+
+// Add Image based on Spot ID
+router.post("/:spotId/images", async (req, res, next) => {
+  const { user } = req;
+  if (user) {
+    const spotId = req.params.spotId;
+    const spotInfo = await Spot.findByPk(spotId);
+    if (spotInfo) {
+      if (user.id === spotInfo.ownerId) {
+        const { url, preview } = req.body;
+
+        //Create the image
+        const newImage = await SpotImage.create({
+          url,
+          preview,
+          spotId: spotId
+        });
+
+        // Return the created image
+        return res.json(newImage);      // #TODO get rid of created and updated in response
+      } else {
+        res.statusCode = 403;
+        res.json({ message: "Forbidden: Spot must belong to the current user"})
+      }
+    } else {
+      res.statusCode = 404;
+      res.json({ message: "Spot couldn't be found" })
+    }
+  } else {
+    res.statusCode = 401;
+    return res.json({ message: "Authentication required"});
+  }
+});
 
 // Create a new Spot
 router.post("/", validateNewSpot, async (req, res, next) => {
