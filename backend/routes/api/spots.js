@@ -26,7 +26,7 @@ const validateNewSpot = [
       .withMessage('Name must be less than 50 characters'),
     check('description').exists({ checkFalsy: true })
       .withMessage('Description is required'),
-    check('price').isFloat({ min: 0.01 })  // Needs work
+    check('price').isFloat({ min: 0.01 })                   // #TODO Needs work
       .withMessage('Price per day must be a positive number'),
     handleValidationErrors
 ];
@@ -77,7 +77,7 @@ router.get("/:spotId", async (req, res, next) => {
     const user = await User.findByPk(spot.ownerId);
     if (spot) {
         return res.json({
-            id: spot.id,
+            id: spot.id,                                // #TODO come back refactor
             ownerId: spot.ownerId,
             address: spot.address,
             city: spot.city,
