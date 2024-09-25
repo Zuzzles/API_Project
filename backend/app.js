@@ -7,6 +7,7 @@ const csurf = require('csurf');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { ValidationError } = require('sequelize');
+const imagesRouter = require('./routes/api/imageRoutes.js');
 
 // Production flag variable
 const { environment } = require('./config');
@@ -24,14 +25,14 @@ if (!isProduction) {
     // enable cors only in development
     app.use(cors());
   }
-  
+
   // helmet helps set a variety of headers to better secure your app
   app.use(
     helmet.crossOriginResourcePolicy({
       policy: "cross-origin"
     })
   );
-  
+
   // Set the _csrf token and create req.csrfToken method
   app.use(
     csurf({
@@ -81,5 +82,8 @@ app.use((err, _req, res, _next) => {
       stack: isProduction ? null : err.stack
     });
 });
+
+app.use(imagesRouter); //define the image router
+
 
 module.exports = app;

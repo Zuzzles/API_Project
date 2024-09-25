@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Spot.hasMany(models.SpotImage, {
+        foreignKey: 'spotId',
+        onDelete: 'CASCADE',
+      });
     }
   }
   Spot.init({
@@ -23,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    city: { 
+    city: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -31,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    country: { 
+    country: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -55,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
         len: [1, 50],
       }
     },
-    description: { 
+    description: {
       type: DataTypes.STRING,
       allowNull: false,
     },
