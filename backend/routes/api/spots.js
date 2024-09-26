@@ -161,18 +161,18 @@ router.put("/:spotId", validateNewSpot, async (req, res, next) => {
             price,
         });
         return res.json(updatedSpot);
-      }  else {
+      } /* else {
         res.statusCode = 403;
         res.json({ message: "Forbidden: Spot must belong to the current user"})
-      }
-    } else {
+      }*/
+    } /*else {
       res.statusCode = 404;
       res.json({ message: "Spot couldn't be found" })
-    }
-  } else {
+    }*/
+  } /*else {
     res.statusCode = 401;
     return res.json({ message: "Authentication required"});
-  }
+  }*/
 };
 /*
 //Delete a Spot
