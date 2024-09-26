@@ -16,6 +16,46 @@ const validateReview = [
     handleValidationErrors
 ];
 
+// Add a Review Image
+router.post("/:reviewId/images", async (req, res, next) => {
+  const { user } = req;
+  console.log(user);
+  if (user) {
+    const reviewId = req.params.reviewId;
+    const review = await Review.findByPk(reviewId);
+    if (user.id === review.userId) {
+      if (review) {
+        const reviewImgs = await Review.findAll({
+          where: {
+            reviewId: reviewId
+          }
+        });
+        if (reviewImgs.length < 10) {
+          // Create new Image
+          const { url, preview } = req.body;
+          const newImage = await ReviewImage.create({
+            url,
+            preview,
+            reviewId: reviewId
+          });
+        } else {
+          res.statusCode = 403;
+          return res.json({ message: "Maximum number of images for this resource was reached"});
+        }
+      } else {
+        res.statusCode = 404;
+        return res.json({ message: "Review couldn't be found"});
+      }
+    } else {
+      res.statusCode = 403;
+      res.json({ message: "Forbidden: Review must belong to the current user"})
+    }
+  } else {
+    res.statusCode = 401;
+    return res.json({ message: "Authentication required"});
+  }
+})
+
 // Get all Reviews from Current User
 router.get("/current", async (req, res, next) => {
   const { user } = req;
