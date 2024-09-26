@@ -173,15 +173,15 @@ router.put("/:spotId", validateNewSpot, async (req, res, next) => {
 });
 
 //Delete a Spot
-router.delete("/:spotId", validateNewSpot, async (req, res, next) => {
+router.delete("/:spotId", async (req, res, next) => {
   const { user } = req;
   if (user) {
     const spotId = req.params.spotId;
-    const spotInfo = await Spot.findByPk(spotId);
+    const spotInfo = await Spot.findByPk(spotId);  // #TODO change spotInfo to spot for clarity
 
     if (spotInfo) {
-      if (user.id === spot.ownerId) {
-          await spotId.destroy();
+      if (user.id === spotInfo.ownerId) {
+          await spotInfo.destroy();
           return res.json({ message: "Spot deleted" });
         } else {
         res.statusCode = 403;
