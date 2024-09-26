@@ -12,11 +12,16 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Spot.hasMany(models.SpotImage, {
         foreignKey: 'spotId',
-        hooks: true
+        hooks: true,
+        onDelete: 'CASCADE'
       });
+      Spot.hasMany(models.Review, {
+        foriegnKey: 'spotId',
+        hooks: true,
+        onDelete: 'CASCADE'
+      })
       Spot.belongsTo(models.User, {
         foreignKey: 'ownerId',
-        onDelete: 'CASCADE'
       })
     }
   }
@@ -24,7 +29,6 @@ module.exports = (sequelize, DataTypes) => {
     ownerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: "Users" },
     },
     address: {
       type: DataTypes.STRING,

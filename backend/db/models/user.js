@@ -13,7 +13,14 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Spot, {
         foreignKey: 'ownerId',
         hooks: true,
-      })
+        onDelete: 'CASCADE',
+      });
+      User.hasMany(models.Review, {
+        foreignKey: 'userId',
+        hooks: true,
+        onDelete: 'CASCADE',
+      });
+      // User.hasMany(model.Booking, {});       // #TODO add has many for bookings
     }
   }
   User.init({
