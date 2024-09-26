@@ -180,7 +180,7 @@ router.delete("/:spotId", validateNewSpot, async (req, res, next) => {
     const spotInfo = await Spot.findByPk(spotId);
 
     if (spotInfo) {
-      if (user.id === spotInfo.ownerId) {
+      if (user.id === spot.ownerId) {
           await spotId.destroy();
           return res.json({ message: "Spot deleted" });
         } else {
