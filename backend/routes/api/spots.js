@@ -137,39 +137,77 @@ router.get("/:spotId", async (req, res, next) => {
 })
 
 //Edit a Spot
-router.put("/:spotId", async (req, res, next) => {
-  const { address, city, state, country, lat, lng, name, description, price } = req.body;
-  const spotId = req.params.spotId;
-
-  // Find the spot
-
-  const spot = await Spot.findByPk(spotId);
-
-  //Check if the spot exists
-
-  if (spot) {
-    const updatedSpot = await spot.update({
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-  });
-  return res.json(updatedSpot);
-} else {
-  res.statusCode = 404;
-  return res.json({ message: "Spot couldn't be found" })
-}
+router.put("/:spotId", validateNewSpot, async (req, res, next) => {
+  const { user } = req;
+  if (user) {
+    const spotId = req.params.spotId;
+    const spotInfo = await Spot.findByPk(spotId);
+    // Check if the spot exists
+    if (spotInfo) {
+      if (user.id === spotInfo.ownerId) {
+        const { address, city, state, country, lat, lng, name, description, price } = req.body;
+        const updatedSpot = await spotInfo.update({
+          address,
+          city,
+          state,
+          country,
+          lat,
+          lng,
+          name,
+          description,
+          price,
+        });
+        return res.json(updatedSpot);
+      } else {
+        res.statusCode = 403;
+        res.json({ message: "Forbidden: Spot must belong to the current user"})
+      }
+    } else {
+      res.statusCode = 404;
+      res.json({ message: "Spot couldn't be found" })
+    }
+  } else {
+    res.statusCode = 401;
+    return res.json({ message: "Authentication required"});
+  }
 });
+/*
+//Delete a Spot
+router.delete("/:spotId", validateNewSpot, async (req, res, next) => {
+  const { user } = req;
+  if (user) {
+    const spotId = req.params.spotId;
+    const spotInfo = await Spot.findByPk(spotId);
+    if (spotInfo) {
+      if (user.id === spotInfo.ownerId) {
+        const spot = await Spot.findByPk(spotId);
+        if (spot) {
+          await spot.destroy();
+          return res.json({ message: "Spot deleted" });
+        } else {
+          res.statusCode = 404;
+          res.json({ message: "Spot couldn't be found" })
+        }
+      } else {
+        res.statusCode = 403;
+        res.json({ message: "Forbidden: Spot must belong to the current user"})
+      }
+    } else {
+      res.statusCode = 404;
+      res.json({ message: "Spot couldn't be found" })
+    }
+  } else {
+    res.statusCode = 401;
+    return res.json({ message: "Authentication required"});
+  }
+});*/
+
+
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
     const spots = await Spot.findAll();
     return res.json({ Spots: spots });
-})
+});
 
 module.exports = router;
