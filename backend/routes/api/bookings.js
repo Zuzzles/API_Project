@@ -33,10 +33,10 @@ router.get("spots/:spotId/bookings", async (req, res, next) => {
            }
        });
        return res.json({ Bookings: bookingsInfo });
-    
+
 }
 });
-
+/*
 // Get all bookings for a spot
 router.get("/spots/:spotId/bookings", async (req, res, next) => {
     const spotId = req.params.spotId;
@@ -49,7 +49,7 @@ router.get("/spots/:spotId/bookings", async (req, res, next) => {
         }
     });
     return res.json({ Bookings: bookings });
-});
+});*/
 
 // Create a booking
 router.post("/spots/:spotId/bookings", validateNewBooking, async (req, res, next) => {
@@ -65,7 +65,7 @@ router.post("/spots/:spotId/bookings", validateNewBooking, async (req, res, next
     res.statusCode = 201
     return res.json(newBooking);
 });
-
+/*
 //Edit a booking
 router.put("/bookings/:bookingId", async (req, res, next) => {
     const { user } = req;
@@ -94,7 +94,7 @@ router.put("/bookings/:bookingId", async (req, res, next) => {
         return res.json({ message: "Booking couldn't be found" });
     }
 }
-
+*/
 //Delete a booking
 router.delete("/bookings/:bookingId", async (req, res, next) => {
 
@@ -115,11 +115,11 @@ const bookingInfo = await Booking.findByPk(bookingId);
 
     }
 });
-
+/*
 // Get all bookings
 router.get("/bookings/current", validateNewBooking, async (req, res, next) => {
     const bookings = await Booking.findAll();
     return res.json({ Bookings: bookings });
-});
+});*/
 
 module.exports = router;
