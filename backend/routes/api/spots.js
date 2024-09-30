@@ -5,30 +5,38 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser } = require('../../utils/auth');
-const { SpotImage, Spot, User } = require('../../db/models');
+const { SpotImage, Spot, User, Review, ReviewImage } = require('../../db/models');
 
 const router = express.Router();
 
 const validateNewSpot = [
-    check('address').exists({ checkFalsy: true})
-      .withMessage('Street address is required'),
-    check('city').exists({ checkFalsy: true})
-      .withMessage('City is required'),
-    check('state').exists({ checkFalsy: true})
-      .withMessage('State is required'),
-    check('country').exists({ checkFalsy: true})
-      .withMessage('Country is required'),
-    check('lat').isFloat({ min: -90, max: 90 })
-      .withMessage('Latitude must be within -90 and 90'),
-    check('lng').isFloat({ min: -180, max: 180})
-      .withMessage('Longitude must be within -180 and 180'),
-    check('name').isLength({ max: 49 })
-      .withMessage('Name must be less than 50 characters'),
-    check('description').exists({ checkFalsy: true })
-      .withMessage('Description is required'),
-    check('price').isFloat({ min: 0.01 })                   // #TODO Needs work
-      .withMessage('Price per day must be a positive number'),
-    handleValidationErrors
+  check('address').exists({ checkFalsy: true})
+    .withMessage('Street address is required'),
+  check('city').exists({ checkFalsy: true})
+    .withMessage('City is required'),
+  check('state').exists({ checkFalsy: true})
+    .withMessage('State is required'),
+  check('country').exists({ checkFalsy: true})
+    .withMessage('Country is required'),
+  check('lat').isFloat({ min: -90, max: 90 })
+    .withMessage('Latitude must be within -90 and 90'),
+  check('lng').isFloat({ min: -180, max: 180})
+    .withMessage('Longitude must be within -180 and 180'),
+  check('name').isLength({ max: 49 })
+    .withMessage('Name must be less than 50 characters'),
+  check('description').exists({ checkFalsy: true })
+    .withMessage('Description is required'),
+  check('price').isFloat({ min: 0.01 })                   // #TODO Needs work
+    .withMessage('Price per day must be a positive number'),
+  handleValidationErrors
+];
+
+const validateReview = [
+  check('review').exists({ checkFalsy: true })
+    .withMessage('Review text is required'),
+  check('stars').isInt({ min: 1, max: 5 })
+    .withMessage('Stars must be an integer from 1 to 5'),
+  handleValidationErrors
 ];
 
 // Add Image based on Spot ID
@@ -64,6 +72,40 @@ router.post("/:spotId/images", async (req, res, next) => {
   }
 });
 
+// Create a new Review
+router.post("/:spotId/reviews", validateReview, async (req, res, next) => {
+  const { user } = req;
+    if (user) {
+      const spotId = req.params.spotId;
+      const spot = await Spot.findByPk(spotId);
+      if (spot) {
+        const repeatReview = await Review.findAll({
+          where: {
+            userId: user.id,
+            spotId: spotId
+          }
+        });
+        if (repeatReview.length === 0) {
+          const { review, stars } = req.body;
+          const newReview = await Review.create({
+            userId: user.id,
+            spotId: spotId,
+            review: review,
+            stars: stars
+          })
+        } else {
+          // #TODO error message
+        }
+      } else {
+        res.statusCode = 404;
+        res.json({ message: "Spot couldn't be found" })
+      }
+    } else {
+      res.statusCode = 401;
+      return res.json({ message: "Authentication required"});
+    }
+});
+
 // Create a new Spot
 router.post("/", validateNewSpot, async (req, res, next) => {
     const { user } = req;
@@ -88,19 +130,36 @@ router.post("/", validateNewSpot, async (req, res, next) => {
     }
 });
 
+// Get all Reviews by Spot ID
+router.get("/:spotId/reviews", async (req, res, next) => {
+  const spotId = req.params.spotId;
+  const spot = await Spot.findByPk(spotId);
+  if (spot) {
+    const reviews = await Review.findAll({
+      where: {
+        spotId: spot.id
+      }
+    });
+    return res.json({ Reviews: reviews });
+  } else {
+    res.statusCode = 404;
+    return res.json({ message: "Spot couldn't be found" });
+  }
+});
+
 // Get all Spots from Current User
 router.get("/current", async (req, res, next) => {
     const { user } = req;
     if (user) {
-        const spots = await Spot.findAll({
-            where: {
-                ownerId: user.id
-            }
-        });
-        return res.json({ Spots: spots });
+      const spots = await Spot.findAll({
+          where: {
+              ownerId: user.id
+          }
+      });
+      return res.json({ Spots: spots });
     } else {
-        res.statusCode = 401;
-        return res.json({ message: "Authentication required"});
+      res.statusCode = 401;
+      return res.json({ message: "Authentication required"});
     }
 });
 
@@ -196,9 +255,6 @@ router.delete("/:spotId", async (req, res, next) => {
     return res.json({ message: "Authentication required"});
   }
 });
-
-
-
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
