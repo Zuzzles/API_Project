@@ -21,8 +21,23 @@ const validateNewBooking = [
     handleValidationErrors
 ];
 
+// Get all current user's bookings
+router.get("/bookings/current", async (req, res, next) => {
+    const { user } = req;
+    if (user) {
+ // Bookings for a spot
+ router.get("spots/:spotId/bookings", async (req, res, next) => {
+        const bookingsInfo = await Booking.findAll({
+            where: {
+                userId: user.id
+            }
+        });
+        return res.json({ Bookings: bookingsInfo });
+        });
+    }
+     });
 
-/*
+
 // Get all bookings for a spot
 router.get("/spots/:spotId/bookings", async (req, res, next) => {
     const spotId = req.params.spotId;
@@ -39,7 +54,7 @@ router.get("/spots/:spotId/bookings", async (req, res, next) => {
         }
     });
 
-});*/
+
 
 
 // Create a booking
