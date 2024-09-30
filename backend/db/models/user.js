@@ -20,7 +20,11 @@ module.exports = (sequelize, DataTypes) => {
         hooks: true,
         onDelete: 'CASCADE',
       });
-      // User.hasMany(model.Booking, {});       // #TODO add has many for bookings
+      User.hasMany(models.Booking, {
+        foreignKey: 'userId',
+        hooks: true,
+        onDelete: 'CASCADE',
+      });       
     }
   }
   User.init({

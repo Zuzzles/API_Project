@@ -16,7 +16,11 @@ module.exports = (sequelize, DataTypes) => {
       Review.belongsTo(models.Spot, {
         foriegnKey: 'spotId',
       });
-      // User.hasMany(model.SpotImage, {});       // #TODO add has many for bookings
+      Review.hasMany(model.ReviewImage, {
+        foriegnKey: 'reviewId',
+        hooks: true,
+        onDelete: 'CASCADE',
+      });      
     }
   }
   Review.init({

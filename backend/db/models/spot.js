@@ -19,10 +19,15 @@ module.exports = (sequelize, DataTypes) => {
         foriegnKey: 'spotId',
         hooks: true,
         onDelete: 'CASCADE'
-      })
+      });
+      Spot.hasMany(models.Booking, {
+        foriegnKey: 'spotId',
+        hooks: true,
+        onDelete: 'CASCADE'
+      });
       Spot.belongsTo(models.User, {
         foreignKey: 'ownerId',
-      })
+      });
     }
   }
   Spot.init({
