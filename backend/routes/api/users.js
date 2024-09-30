@@ -33,6 +33,33 @@ router.post("/", validateSignup, async (req, res) => {
     const { email, password, username } = req.body;         // Destructure email, password, and username from the request body
     const hashedPassword = bcrypt.hashSync(password);       // Hash the password
 
+try{
+  //if user already exists
+const existingUserByEmail = await User.findOne({where: {email}});
+const existingUserByUsername = await User.findOne({where: {username}});
+
+const errors={};
+if (existingUserByEmail){
+  errors.email = "User with that email already exists";
+}
+if (existingUserByUsername){
+  errors.username = "User with that username already exists";
+}
+
+if (Object.keys(errors).length > 0){
+
+  return res.status.json({message: "User already exists",
+    errors: errors
+  });
+}
+
+}
+catch(error){
+  console.error(error);
+  return res.status(500).json({message: "Internal server error"});
+}
+
+
     const user = await User.create({                        // Create a new user in the database
         username,
         email,
@@ -53,5 +80,7 @@ router.post("/", validateSignup, async (req, res) => {
         user: safeUser
     });
 });
+
+
 
 module.exports = router;

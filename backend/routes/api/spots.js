@@ -95,7 +95,7 @@ router.post("/:spotId/reviews", validateReview, async (req, res, next) => {
           })
         } else {
           res.statusCode = 500;
-          return res.json({ message: "User alredy has a review for this spot"});
+          return res.json({ message: "User already has a review for this spot"});
         }
       } else {
         res.statusCode = 404;
@@ -242,7 +242,7 @@ router.delete("/:spotId", async (req, res, next) => {
     if (spotInfo) {
       if (user.id === spotInfo.ownerId) {
           await spotInfo.destroy();
-          return res.json({ message: "Spot deleted" });
+          return res.json({ message: "Successfully deleted" });
         } else {
         res.statusCode = 403;
         res.json({ message: "Forbidden: Spot must belong to the current user"})
@@ -262,7 +262,7 @@ router.get("/", async (req, res, next) => {
     const spots = await Spot.findAll();
     const spotsRes = [];
     for (let i = 0; i < spots.length; i++) {
-      const reviews = 
+      const reviews =
       spotsRes[i] = {
         id: spots[i].id,
         ownerId: spots[i].ownerId,
