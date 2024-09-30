@@ -21,35 +21,26 @@ const validateNewBooking = [
     handleValidationErrors
 ];
 
-// Get all current user's bookings
-router.get("/bookings/current", async (req, res, next) => {
-   const { user } = req;
-   if (user) {
-// Bookings for a spot
-router.get("spots/:spotId/bookings", async (req, res, next) => {
-       const bookingsInfo = await Booking.findAll({
-           where: {
-               userId: user.id
-           }
-       });
-       return res.json({ Bookings: bookingsInfo });
 
-}
-});
 /*
 // Get all bookings for a spot
 router.get("/spots/:spotId/bookings", async (req, res, next) => {
     const spotId = req.params.spotId;
+    if (bookings.length) {
     const bookings = await Booking.findAll({
         where: {
-            spotId: spotId
-        }
-        if(!bookings.length) {
+            ownerId: spotId
+            }
+        });
+        return res.json({ Bookings: bookings });
+    }else{
+        res.statusCode = 404;
             return res.json({ message: "Spot couldn't be found" }); // no booking could be found
         }
     });
-    return res.json({ Bookings: bookings });
+
 });*/
+
 
 // Create a booking
 router.post("/spots/:spotId/bookings", validateNewBooking, async (req, res, next) => {
@@ -62,10 +53,9 @@ router.post("/spots/:spotId/bookings", validateNewBooking, async (req, res, next
         startDate,
         endDate
     });
-    res.statusCode = 201
     return res.json(newBooking);
 });
-/*
+
 //Edit a booking
 router.put("/bookings/:bookingId", async (req, res, next) => {
     const { user } = req;
@@ -83,43 +73,49 @@ router.put("/bookings/:bookingId", async (req, res, next) => {
         else if (user.id !== bookingInfo.userId) {
             res.statusCode = 403;
             return res.json({ message:
-                " Sorry, this sopt is already booked for the specified dates" });
-            "errors": {
-                "startDate": "Start date conflicts with an existing booking",
-                "endDate": "End date conflicts with an existingbooking."
-            }
-        }
+                " Sorry, this spot is already booked for the specified dates"
+              /*  `$startDate` ": Start date conflicts with an existing booking",*/
+              /*  `$endDate` ": End date conflicts with an existingbooking." }); */
+
+        })
     } else {
         res.statusCode = 404;
         return res.json({ message: "Booking couldn't be found" });
     }
 }
-*/
+});
+
+
 //Delete a booking
 router.delete("/bookings/:bookingId", async (req, res, next) => {
 
-const {user} = req;
-const bookingId = req.params.bookingId;
-const bookingInfo = await Booking.findByPk(bookingId);
+    const {user} = req;
+    const bookingId = req.params.bookingId;
+    const bookingInfo = await Booking.findByPk(bookingId);
 
-    if (bookingInfo) {
-        await bookingInfo.destroy();
-        return res.json({ message: "Booking deleted" });
-    } else {
-        res.statusCode = 404;
-        return res.json({ message: "Booking not found" });
-    }
-    else if (bookingInfo.startDate < new Date()) {
-        res.statusCode = 403;
-        return res.json({ message: "Bookings that have started can't be deleted" });
+        if (bookingInfo.startDate < new Date()) {
+            res.statusCode = 403;
+            return res.json({ message: "Bookings that have started can't be deleted" });
 
-    }
-});
-/*
+        } else if (user.id !== bookingInfo.userId) {
+            res.statusCode = 403;
+            return res.json({ message: "Forbidden: Booking must belong to the current user" });
+
+        }
+        if (bookingInfo) {
+            await bookingInfo.destroy();
+            return res.json({ message: "Booking deleted" });
+        } else {
+            res.statusCode = 404;
+            return res.json({ message: "Booking not found" });
+        }
+    });
+
+
 // Get all bookings
 router.get("/bookings/current", validateNewBooking, async (req, res, next) => {
     const bookings = await Booking.findAll();
     return res.json({ Bookings: bookings });
-});*/
+});
 
 module.exports = router;
