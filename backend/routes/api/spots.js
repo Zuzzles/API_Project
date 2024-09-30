@@ -94,11 +94,12 @@ router.post("/:spotId/reviews", validateReview, async (req, res, next) => {
             stars: stars
           })
         } else {
-          // #TODO error message
+          res.statusCode = 500;
+          return res.json({ message: "User alredy has a review for this spot"});
         }
       } else {
         res.statusCode = 404;
-        res.json({ message: "Spot couldn't be found" })
+        return res.json({ message: "Spot couldn't be found" })
       }
     } else {
       res.statusCode = 401;
@@ -259,6 +260,27 @@ router.delete("/:spotId", async (req, res, next) => {
 // Get all Spots
 router.get("/", async (req, res, next) => {
     const spots = await Spot.findAll();
+    const spotsRes = [];
+    for (let i = 0; i < spots.length; i++) {
+      const reviews = 
+      spotsRes[i] = {
+        id: spots[i].id,
+        ownerId: spots[i].ownerId,
+        address: spots[i].address,
+        city: spots[i].city,
+        state: spots[i].state,
+        country: spots[i].country,
+        lat: spots[i].lat,
+        lng: spots[i].lng,
+        name: spots[i].name,
+        description: spots[i].description,
+        price: spots[i].price,
+        createdAt: spots[i].createdAt,
+        updatedAt: spots[i].updatedAt,
+        avgRating: 4.5,
+        "previewImage": "image url"
+      }
+    }
     return res.json({ Spots: spots });
 });
 

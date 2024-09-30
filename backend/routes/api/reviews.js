@@ -4,7 +4,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser } = require('../../utils/auth');
-const { Review, Spot, User, ReviewImages } = require('../../db/models');
+const { Review, Spot, User, ReviewImage } = require('../../db/models');
 
 const router = express.Router();
 
@@ -23,8 +23,8 @@ router.post("/:reviewId/images", async (req, res, next) => {
   if (user) {
     const reviewId = req.params.reviewId;
     const review = await Review.findByPk(reviewId);
-    if (user.id === review.userId) {
-      if (review) {
+    if (review) {
+      if (user.id === review.userId) {
         const reviewImgs = await Review.findAll({
           where: {
             reviewId: reviewId
@@ -43,12 +43,12 @@ router.post("/:reviewId/images", async (req, res, next) => {
           return res.json({ message: "Maximum number of images for this resource was reached"});
         }
       } else {
-        res.statusCode = 404;
-        return res.json({ message: "Review couldn't be found"});
+        res.statusCode = 403;
+        return res.json({ message: "Forbidden: Review must belong to the current user"})
       }
     } else {
-      res.statusCode = 403;
-      res.json({ message: "Forbidden: Review must belong to the current user"})
+      res.statusCode = 404;
+      return res.json({ message: "Review couldn't be found"});
     }
   } else {
     res.statusCode = 401;
@@ -97,6 +97,56 @@ router.get("/current", async (req, res, next) => {
       };
     }
     return res.json({ Reviews: reviewsList });
+  } else {
+    res.statusCode = 401;
+    return res.json({ message: "Authentication required"});
+  }
+});
+
+router.put("/:reviewId", validateReview, async (req, res, next) => {
+  const { user } = req;
+  if (user) {
+    const reviewId = req.params.reviewId;
+    const review = await Review.findByPk(reviewId);
+    if (review) {
+      if (user.id === review.userId) {
+        const { review, stars } = req.body;
+        const updatedReview = await review.update({
+          review,
+          stars
+        });
+        return res.json(updatedReview);
+      } else {
+        res.statusCode = 403;
+        return res.json({ message: "Forbidden: Review must belong to the current user"})
+      }
+    } else {
+      res.statusCode = 404;
+      return res.json({ message: "Review couldn't be found"});
+    }
+  } else {
+    res.statusCode = 401;
+    return res.json({ message: "Authentication required"});
+  }
+});
+
+router.delete("/:reviewId", async (req, res, next) => {
+  const { user } = req;
+  if (user) {
+    const reviewId = req.params.reviewId;
+    const review = await Review.findByPk(reviewId);
+    if (review) {
+      if (user.id === review.userId) {
+        await review.destroy();
+        return res.json({ message: "Successfully deleted" });
+      } else {
+        res.statusCode = 403;
+        return res.json({ message: "Forbidden: Review must belong to the current user"})
+      }
+    } else {
+      res.statusCode = 404;
+      return res.json({ message: "Review couldn't be found"});
+    }
   } else {
     res.statusCode = 401;
     return res.json({ message: "Authentication required"});
