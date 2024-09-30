@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       Review.belongsTo(models.Spot, {
         foriegnKey: 'spotId',
       });
-      Review.hasMany(model.ReviewImage, {
+      Review.hasMany(models.ReviewImage, {
         foriegnKey: 'reviewId',
         hooks: true,
         onDelete: 'CASCADE',
