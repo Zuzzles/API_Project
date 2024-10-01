@@ -36,11 +36,11 @@ router.post("/", validateLogin, async (req, res, next) => {
 
     // If no user is found, return an error
     if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-        const err = new Error("Login failed");
-        err.status = 401;
-        err.title = "Login failed";
-        err.errors = { credential: "Invalid credentials" };
-        return next(err);
+        //const err = new Error("Login failed");
+        //err.status = 401;
+        //err.title = "Login failed";
+        const err= { message: "Invalid credentials" };
+        return res.status(401).json(err);
     }
 
     // If a user is found, call the setTokenCookie function and return the user

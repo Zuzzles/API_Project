@@ -33,8 +33,7 @@ router.post("/", validateSignup, async (req, res) => {
     const { email, password, username, firstName, lastName } = req.body;         // Destructure email, password, and username from the request body
     const hashedPassword = bcrypt.hashSync(password);       // Hash the password
 
-try{
-  //if user already exists
+
 const existingUserByEmail = await User.findOne({where: {email}});
 const existingUserByUsername = await User.findOne({where: {username}});
 
@@ -48,16 +47,11 @@ if (existingUserByUsername){
 
 if (Object.keys(errors).length > 0){
 
-  return res.status.json({message: "User already exists",
+  return res.status(500).json({message: "User already exists",
     errors: errors
   });
 }
 
-}
-catch(error){
-  console.error(error);
-  return res.status(500).json({message: "Internal server error"});
-}
 
 
     const user = await User.create({                        // Create a new user in the database
@@ -78,7 +72,7 @@ catch(error){
 
     await setTokenCookie(res, user);                        // Call the setTokenCookie function
 
-    return res.json({                                       // Return the user
+    return res.status(201).json({                                       // Return the user
         user: safeUser
     });
 });
