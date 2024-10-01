@@ -30,7 +30,7 @@ const validateSignup = [
 
 //Sign Up
 router.post("/", validateSignup, async (req, res) => {
-    const { email, password, username } = req.body;         // Destructure email, password, and username from the request body
+    const { email, password, username, firstName, lastName } = req.body;         // Destructure email, password, and username from the request body
     const hashedPassword = bcrypt.hashSync(password);       // Hash the password
 
 try{
@@ -61,6 +61,8 @@ catch(error){
 
 
     const user = await User.create({                        // Create a new user in the database
+        firstName,
+        lastName,
         username,
         email,
         hashedPassword,
