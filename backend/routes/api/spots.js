@@ -94,9 +94,10 @@ router.post("/:spotId/reviews", validateReview, async (req, res, next) => {
             review: review,
             stars: stars
           })
+          return res.json(newReview);
         } else {
           res.statusCode = 500;
-          return res.json({ message: "User alredy has a review for this spot"});
+          return res.json({ message: "User already has a review for this spot"});
         }
       } else {
         res.statusCode = 404;
@@ -141,7 +142,24 @@ router.get("/:spotId/reviews", async (req, res, next) => {
     const reviews = await Review.findAll({
       where: {
         spotId: spot.id
-      }
+      },
+      include: [
+        { 
+          model: User,
+          attributes: [
+            'id',
+            'firstName',
+            'lastName'
+          ]
+        },
+        {
+          model: ReviewImage,
+          attributes: [
+            'id',
+            'url'
+          ]
+        }
+      ]
     });
     return res.json({ Reviews: reviews });
   } else {
