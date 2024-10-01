@@ -29,7 +29,7 @@ module.exports = {
         // "avgRating": 4.5,
         // "previewImage": "image url"
       },
-    ], {});
+    ], { validate: true });
   },
 
   async down (queryInterface, Sequelize) {
