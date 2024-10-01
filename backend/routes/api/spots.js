@@ -366,65 +366,122 @@ router.delete("/:spotId", async (req, res, next) => {
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
-    let {
-      page =1,
-      size =20
-      minLat,
-      maxLat,
-      minLng,
-      maxLng,
-      minPrice,
-      maxPrice,
-    } =req.query;
-    page = parseInt(page, 10);
-    size = parseInt(size, 10);
-    //const errors{};
 
-    const spots = await Spot.findAll();
-    const spotsRes = [];
-    for (let i = 0; i < spots.length; i++) {
-      const reviews = await Review.findAll({
-        where: {
-          spotId: spots[i].id,
-        }
-      });
-      let avgStars;
-      if (reviews.length !== 0) {
-        avgStars = reviews.reduce(( sum, review ) => sum + review.stars, 0) / reviews.length;
-      } else {
-        avgStars = 'No Reviews';
+  const errors = {};
+
+  // Validate 'page'
+  let page;
+  if (req.query.page === undefined) {
+    page = 1;
+  } else {
+    page = parseInt(req.query.page);
+  }
+  if (isNaN(page) || page < 1) {
+    errors.page = "Page must be greater than or equal to 1";
+  }
+
+  // Validate 'size'
+  let size;
+  if (req.query.size === undefined) {
+    size = 20;
+  } else {
+    size = parseInt(req.query.size);
+  }
+  if (isNaN(size) || size < 1 || size > 20) {
+    errors.size = "Size must be between 1 and 20";
+  }
+
+  // Helper function to validate and parse float
+  function parseFloatOrUndefined(value, varName, errorSen) {
+    if (value === undefined) return undefined;
+    let parsed = parseFloat(value);
+    if (isNaN(parsed)) errors[varName] = errorSen;
+    return isNaN(parsed) ? undefined : parsed;
+  }
+
+  // Validate and parse lat, lng, price
+  let minLat = parseFloatOrUndefined(req.query.minLat, 'minLat', 'Minimum latitude is invalid');
+  let maxLat = parseFloatOrUndefined(req.query.maxLat, 'maxLat', 'Maximum latitude is invalid');
+  let minLng = parseFloatOrUndefined(req.query.minLng, 'minLng', 'Minimum longitude is invalid');
+  let maxLng = parseFloatOrUndefined(req.query.maxLng, 'maxLng', 'Maximum longitude is invalid');
+  let minPrice = parseFloatOrUndefined(req.query.minPrice, 'minPrice', 'Minimum price must be greater than or equal to 0');
+  let maxPrice = parseFloatOrUndefined(req.query.maxPrice, 'maxPrice', 'Maximum price must be greater than or equal to 0');
+
+  // If there are validation errors, return a 400 response
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({
+      message: "Bad Request",
+      errors,
+    });
+  }
+
+  // Build the 'where' clause for Sequelize
+  let where = {};
+
+  if (minLat !== undefined) where.lat = { ...where.lat, [Op.gte]: minLat };
+  if (maxLat !== undefined) where.lat = { ...where.lat, [Op.lte]: maxLat };
+  if (minLng !== undefined) where.lng = { ...where.lng, [Op.gte]: minLng };
+  if (maxLng !== undefined) where.lng = { ...where.lng, [Op.lte]: maxLng };
+  if (minPrice !== undefined) where.price = { ...where.price, [Op.gte]: minPrice };
+  if (maxPrice !== undefined) where.price = { ...where.price, [Op.lte]: maxPrice };
+
+  // Set limit and offset for pagination
+  const limit = size;
+  const offset = (page - 1) * size;
+
+  const spots = await Spot.findAll({
+    where,
+    limit,
+    offset
+  });
+  const spotsRes = [];
+  for (let i = 0; i < spots.length; i++) {
+    const reviews = await Review.findAll({
+      where: {
+        spotId: spots[i].id,
       }
-      const spotImages = await SpotImage.findAll({
-        where: {
-          spotId: spots[i].id,
-          preview: true
-        }
-      });
-      let previewUrl
-      if (spotImages.length !== 0) {
-        previewUrl = spotImages[0].url;
-      } else {
-        previewUrl = 'No Preview Image'
-      }
-      spotsRes[i] = {
-        id: spots[i].id,
-        ownerId: spots[i].ownerId,
-        address: spots[i].address,
-        city: spots[i].city,
-        state: spots[i].state,
-        country: spots[i].country,
-        lat: spots[i].lat,
-        lng: spots[i].lng,
-        name: spots[i].name,
-        description: spots[i].description,
-        price: spots[i].price,
-        createdAt: spots[i].createdAt,
-        updatedAt: spots[i].updatedAt,
-        avgRating: avgStars,
-        previewImage: previewUrl
-      }
+    });
+    let avgStars;
+    if (reviews.length !== 0) {
+      avgStars = reviews.reduce(( sum, review ) => sum + review.stars, 0) / reviews.length;
+    } else {
+      avgStars = 'No Reviews';
     }
-    return res.json({ Spots: spotsRes });
+    const spotImages = await SpotImage.findAll({
+      where: {
+        spotId: spots[i].id,
+        preview: true
+      }
+    });
+    let previewUrl
+    if (spotImages.length !== 0) {
+      previewUrl = spotImages[0].url;
+    } else {
+      previewUrl = 'No Preview Image'
+    }
+    spotsRes[i] = {
+      id: spots[i].id,
+      ownerId: spots[i].ownerId,
+      address: spots[i].address,
+      city: spots[i].city,
+      state: spots[i].state,
+      country: spots[i].country,
+      lat: spots[i].lat,
+      lng: spots[i].lng,
+      name: spots[i].name,
+      description: spots[i].description,
+      price: spots[i].price,
+      createdAt: spots[i].createdAt,
+      updatedAt: spots[i].updatedAt,
+      avgRating: avgStars,
+      previewImage: previewUrl
+    }
+  }
+  return res.json({ 
+    Spots: spotsRes,
+    page,
+    size
+  });
 });
 
 module.exports = router;
