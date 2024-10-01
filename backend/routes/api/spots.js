@@ -145,7 +145,7 @@ router.get("/:spotId/reviews", async (req, res, next) => {
         spotId: spot.id
       },
       include: [
-        { 
+        {
           model: User,
           attributes: [
             'id',
@@ -186,8 +186,8 @@ router.get("/current", async (req, res, next) => {
           }
         });
         let avgStars;
-        if (reviews.length !== 0) { 
-          avgStars = reviews.reduce(( sum, review ) => sum + review.stars, 0) / reviews.length; 
+        if (reviews.length !== 0) {
+          avgStars = reviews.reduce(( sum, review ) => sum + review.stars, 0) / reviews.length;
         } else {
           avgStars = 'No Reviews';
         }
@@ -239,8 +239,8 @@ router.get("/:spotId", async (req, res, next) => {
         }
       });
       let avgStars;
-      if (reviews.length !== 0) { 
-        avgStars = reviews.reduce(( sum, review ) => sum + review.stars, 0) / reviews.length; 
+      if (reviews.length !== 0) {
+        avgStars = reviews.reduce(( sum, review ) => sum + review.stars, 0) / reviews.length;
       } else {
         avgStars = 'No Reviews';
       }
@@ -366,6 +366,20 @@ router.delete("/:spotId", async (req, res, next) => {
 
 // Get all Spots
 router.get("/", async (req, res, next) => {
+    let {
+      page =1,
+      size =20
+      minLat,
+      maxLat,
+      minLng,
+      maxLng,
+      minPrice,
+      maxPrice,
+    } =req.query;
+    page = parseInt(page, 10);
+    size = parseInt(size, 10);
+    //const errors{};
+
     const spots = await Spot.findAll();
     const spotsRes = [];
     for (let i = 0; i < spots.length; i++) {
@@ -375,8 +389,8 @@ router.get("/", async (req, res, next) => {
         }
       });
       let avgStars;
-      if (reviews.length !== 0) { 
-        avgStars = reviews.reduce(( sum, review ) => sum + review.stars, 0) / reviews.length; 
+      if (reviews.length !== 0) {
+        avgStars = reviews.reduce(( sum, review ) => sum + review.stars, 0) / reviews.length;
       } else {
         avgStars = 'No Reviews';
       }
