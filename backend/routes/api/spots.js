@@ -367,7 +367,7 @@ router.delete("/:spotId", async (req, res, next) => {
 router.get("/", async (req, res, next) => {
     const spots = await Spot.findAll();
     const spotsRes = [];
-    for (let i = 0; i < spots.length; i++) 
+    for (let i = 0; i < spots.length; i++) {
       const reviews = await Review.findAll({
         where: {
           spotId: spots[i].id,
