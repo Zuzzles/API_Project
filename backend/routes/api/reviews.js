@@ -25,9 +25,9 @@ router.post("/:reviewId/images", async (req, res, next) => {
     const review = await Review.findByPk(reviewId);
     if (review) {
       if (user.id === review.userId) {
-        const reviewImgs = await Review.findAll({
+        const reviewImgs = await ReviewImage.findAll({
           where: {
-            reviewId: reviewId
+            reviewId: review.id
           }
         });
         if (reviewImgs.length < 10) {
@@ -36,8 +36,10 @@ router.post("/:reviewId/images", async (req, res, next) => {
           const newImage = await ReviewImage.create({
             url,
             preview,
-            reviewId: reviewId
+            reviewId: review.id
           });
+          res.statusCode = 201;
+          return res.json(newImage)
         } else {
           res.statusCode = 403;
           return res.json({ message: "Maximum number of images for this resource was reached"});
@@ -132,11 +134,11 @@ router.put("/:reviewId", validateReview, async (req, res, next) => {
   const { user } = req;
   if (user) {
     const reviewId = req.params.reviewId;
-    const review = await Review.findByPk(reviewId);
-    if (review) {
-      if (user.id === review.userId) {
+    const reviewCurr = await Review.findByPk(reviewId);
+    if (reviewCurr) {
+      if (user.id === reviewCurr.userId) {
         const { review, stars } = req.body;
-        const updatedReview = await review.update({
+        const updatedReview = await reviewCurr.update({
           review,
           stars
         });
