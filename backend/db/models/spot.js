@@ -16,12 +16,12 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE'
       });
       Spot.hasMany(models.Review, {
-        foriegnKey: 'spotId',
+        foreignKey: 'spotId',
         hooks: true,
         onDelete: 'CASCADE'
       });
       Spot.hasMany(models.Booking, {
-        foriegnKey: 'spotId',
+        foreignKey: 'spotId',
         hooks: true,
         onDelete: 'CASCADE'
       });
