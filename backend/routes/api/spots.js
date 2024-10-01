@@ -22,7 +22,7 @@ const validateNewSpot = [
     .withMessage('Latitude must be within -90 and 90'),
   check('lng').isFloat({ min: -180, max: 180})
     .withMessage('Longitude must be within -180 and 180'),
-  check('name').isLength({ max: 49 })
+  check('name').exists({ checkFalsy: true }).isLength({ max: 49 })
     .withMessage('Name must be less than 50 characters'),
   check('description').exists({ checkFalsy: true })
     .withMessage('Description is required'),
@@ -57,6 +57,7 @@ router.post("/:spotId/images", async (req, res, next) => {
         });
 
         // Return the created image
+        res.statusCode = 201;
         return res.json(newImage);      // #TODO get rid of created and updated in response
       } else {
         res.statusCode = 403;
@@ -242,7 +243,18 @@ router.get("/:spotId", async (req, res, next) => {
       } else {
         spotImagesRes = 'No Images'
       }
-      console.log(spotImagesRes);
+      let firstN;
+      let lastN;
+      if (user.firstName === null) {
+        firstN = 'No name given';
+      } else {
+        firstN = user.firstName;
+      }
+      if (user.lastName === null) {
+        lastN = 'No name given';
+      } else {
+        lastN = user.lastName;
+      }
       return res.json({
         id: spot.id,                                // #TODO come back for error, try to get will
         ownerId: spot.ownerId,
@@ -262,8 +274,8 @@ router.get("/:spotId", async (req, res, next) => {
         SpotImages: spotImagesRes,
         Owner: {
           id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName
+          firstName: firstN,
+          lastName: lastN
         }
       });
     } else {
@@ -318,7 +330,7 @@ router.delete("/:spotId", async (req, res, next) => {
     if (spotInfo) {
       if (user.id === spotInfo.ownerId) {
           await spotInfo.destroy();
-          return res.json({ message: "Spot deleted" });
+          return res.json({ message: "Successfully deleted" });
         } else {
         res.statusCode = 403;
         res.json({ message: "Forbidden: Spot must belong to the current user"})
