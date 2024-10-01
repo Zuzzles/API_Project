@@ -93,7 +93,8 @@ router.post("/:spotId/reviews", validateReview, async (req, res, next) => {
             spotId: spotId,
             review: review,
             stars: stars
-          })
+          });
+          res.statusCode = 201;
           return res.json(newReview);
         } else {
           res.statusCode = 500;
