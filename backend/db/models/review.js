@@ -43,9 +43,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Review',
-    attributes: {
-      exclude: ['UserId', 'SpotId']
-    }
+    // attributes: {
+    //   exclude: ['UserId', 'SpotId']
+    // }
   });
   return Review;
 };
