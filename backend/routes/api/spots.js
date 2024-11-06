@@ -144,9 +144,9 @@ router.get("/:spotId/reviews", async (req, res, next) => {
       where: {
         spotId: spot.id
       },
-      attributes: {
-        exclude: ['UserId', 'SpotId']
-      },
+      // attributes: {
+      //   exclude: ['UserId', 'SpotId']
+      // },
       include: [
         {
           model: User,
@@ -187,9 +187,9 @@ router.get("/current", async (req, res, next) => {
           where: {
             spotId: spots[i].id,
           },
-          attributes: {
-            exclude: ['UserId', 'SpotId']
-          }
+          // attributes: {
+          //   exclude: ['UserId', 'SpotId']
+          // }
         });
         let avgStars;
         if (reviews.length !== 0) {
@@ -243,9 +243,9 @@ router.get("/:spotId", async (req, res, next) => {
         where: {
           spotId: spot.id,
         },
-        attributes: {
-          exclude: ['UserId', 'SpotId']
-        }
+        // attributes: {
+        //   exclude: ['UserId', 'SpotId']
+        // }
       });
       let avgStars;
       if (reviews.length !== 0) {
@@ -449,9 +449,9 @@ router.get("/", async (req, res, next) => {
       where: {
         spotId: spots[i].id,
       },
-      attributes: {
-        exclude: ['UserId', 'SpotId']
-      }
+      // attributes: {
+      //   exclude: ['UserId', 'SpotId']
+      // }
     });
     let avgStars;
     if (reviews.length !== 0) {
