@@ -19,7 +19,6 @@ const validateReview = [
 // Add a Review Image
 router.post("/:reviewId/images", async (req, res, next) => {
   const { user } = req;
-  console.log(user);
   if (user) {
     const reviewId = req.params.reviewId;
     const review = await Review.findByPk(reviewId);

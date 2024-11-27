@@ -19,8 +19,8 @@ router.use('/reviews', require('./reviews.js'));
 router.use('/spot-images', require('./spot-images.js'));
 
 // test route
-router.post('/test', function(req, res) {
-  res.json({ requestBody: req.body });
-});
+// router.post('/test', function(req, res) {
+//   res.json({ requestBody: req.body });
+// });
 
 module.exports = router;
