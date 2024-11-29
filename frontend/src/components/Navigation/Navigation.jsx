@@ -6,34 +6,14 @@ import './Navigation.css'
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
 
-  // const sessionLinks = sessionUser ? (
-  //   <>
-  //     <li>
-  //       <ProfileButton user={sessionUser} />
-  //     </li>
-  //   </>
-  // ) : (
-  //   <>
-  //     <li>
-  //       <OpenModalButton 
-  //         buttonText="Log In"
-  //         modalComponent={<LoginFormModal />}
-  //       />
-  //     </li>
-  //     <li>
-  //       <OpenModalButton
-  //         buttonText="Sign Up"
-  //         modalComponent={<SignupFormModal />}
-  //       />
-  //     </li>
-  //   </>
-  // );
-
   return (
     <ul>
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
+      {isLoaded && sessionUser ? (
+        <NavLink to="/spots/new">Create a new spot</NavLink>
+      ) : null}
       {isLoaded && (
         <li>
           <ProfileButton user={sessionUser} />
