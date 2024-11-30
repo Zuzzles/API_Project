@@ -34,12 +34,16 @@ const removeSpot = () => {
 
 export const getAllSpots = () => async (dispatch) => {
   const response = await csrfFetch("/api/spots");
-  console.log(response);
   const data = await response.json();
-  console.log(data)
   dispatch(getSpots(data.Spots));
   return response;
 };
+
+export const getSpotById = ({ spotId }) => async (dispatch) => {
+  const response = await csrfFetch(`/api/${spotId}`);
+  const data = await response.json();
+  console.log(data);
+}
 
 export const signup = (user) => async (dispatch) => {
   const { username, firstName, lastName, email, password } = user;
