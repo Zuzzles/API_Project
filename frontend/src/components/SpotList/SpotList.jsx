@@ -18,7 +18,7 @@ function SpotList({ current }) {
   return (
     <div className='grid'>
       {spots?.map((spot) => (
-        <div>
+        <div className='grid-tile'>
           <SpotTile spot={spot} />
           {current ? (
             <div>

@@ -1,9 +1,9 @@
 .img {
-    display: flex;
-    object-fit: contain;
+    display: inline-flex;
 }
 
-img {
-    width: 100px;
-    height: 100px;
+.spot-image {
+    max-width: 100%;
+    height: auto;
+    width: auto\9;
 }

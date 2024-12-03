@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa';
 import * as spotActions from '../../store/spots';
+import './SpotTile.css'
 
 function SpotTile({ spot }) {
 
