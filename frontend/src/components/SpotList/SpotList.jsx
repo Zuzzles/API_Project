@@ -8,17 +8,16 @@ import './SpotList.css'
 
 function SpotList({ current }) {
   const dispatch = useDispatch();
+  const spots = useSelector(state => state.spots.spots);
 
   useEffect(() => {
     dispatch(spotActions.getAllSpots());
   }, [dispatch]);
 
-  const spots = useSelector(state => state.spots.spots);
-
   return (
     <div className='grid'>
       {spots?.map((spot) => (
-        <div className='grid-tile'>
+        <div key={spot?.id} className='grid-tile'>
           <SpotTile spot={spot} />
           {current ? (
             <div>

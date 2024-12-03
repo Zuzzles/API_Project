@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import * as spotsActions from '../../store/spots';
-import { useDispatch, useSelector } from 'react-redux';
-import { useModal } from '../../context/Modal';
+import { useDispatch} from 'react-redux';
+// import { useModal } from '../../context/Modal';
 // import './LoginForm.css';
 
 function SpotForm() {
@@ -45,9 +45,70 @@ function SpotForm() {
         <label>
           Street Address
           <input
-            type="password"
+            type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          City
+          <input
+            type="text"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          State
+          <input
+            type="text"
+            value={address}
+            onChange={(e) => setState(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          Latitude
+          <input
+            type="number"
+            value={lat}
+            onChange={(e) => setLat(e.target.value)}
+          />
+        </label>
+        <label>
+          Longitude
+          <input
+            type="number"
+            value={lng}
+            onChange={(e) => setLng(e.target.value)}
+          />
+        </label>
+        <label>
+          Name of Spot
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          Describe your place to &quot;Guests&quot;
+          <input
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          Set a Price
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
             required
           />
         </label>
