@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import SpotTile from './SpotTile';
 import * as spotActions from '../../store/spots';
 // import './Navigation.css'
 
@@ -11,25 +10,30 @@ function SpotPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(spotActions.getAllSpots());
+    dispatch(spotActions.getSpotById(id));
   }, [dispatch]);
 
-  const spots = useSelector(state => state.spots.spots);
-  console.log(spots);
+  const spot = useSelector(state => state.spots.spot);
+  console.log(spot);
 
   return (
-    <div className='grid'>
-      {spots?.map((spot) => (
+    <div>
+        <h2>{`${spot?.name}`}</h2>
+        <div>{`${spot?.city}, ${spot?.state}, ${spot?.country}`}</div>
+        <div>Images Placeholder</div>
         <div>
-          <SpotTile spot={spot} />
-          {current ? (
             <div>
-                <button>Update</button>
-                <button>Select</button>
+                <h3>Hosted by {`${spot?.Owner.firstName} ${spot?.Owner.lastName}`}</h3>
+                <p>{`${spot?.description}`}</p>
             </div>
-          ) : null}
+            <div>
+                <div>
+                    <div>${`${spot?.price}`} per night</div>
+                    <div>review stuff</div>
+                </div>
+                <button>Reserve</button>
+            </div>
         </div>
-      ))}
     </div>
   );
 }

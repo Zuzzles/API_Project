@@ -4,22 +4,20 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import SpotTile from './SpotTile';
 import * as spotActions from '../../store/spots';
-// import './Navigation.css'
+import './SpotList.css'
 
 function SpotList({ current }) {
   const dispatch = useDispatch();
+  const spots = useSelector(state => state.spots.spots);
 
   useEffect(() => {
     dispatch(spotActions.getAllSpots());
   }, [dispatch]);
 
-  const spots = useSelector(state => state.spots.spots);
-  console.log(spots);
-
   return (
     <div className='grid'>
       {spots?.map((spot) => (
-        <div>
+        <div key={spot?.id} className='grid-tile'>
           <SpotTile spot={spot} />
           {current ? (
             <div>

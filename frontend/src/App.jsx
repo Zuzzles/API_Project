@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Navigation from './components/Navigation/Navigation';
 import SpotList from './components/SpotList/SpotList';
+import SpotPage from './components/SpotPage/SpotPage';
+import SpotForm from './components/SpotForm/SpotForm';
 import * as sessionActions from './store/session';
 
 function Layout() {
@@ -37,15 +39,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/spots/:id',
-        element: <div>
-          Spot Page
-        </div>
+        element: <SpotPage />
       },
       {
         path: '/spots/new',
-        element: <div>
-          Spot Form Page
-        </div>
+        element: <SpotForm />
       },
       {
         path: '/spots/:id/edit',
