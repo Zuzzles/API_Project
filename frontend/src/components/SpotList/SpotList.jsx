@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import SpotTile from './SpotTile';
 import * as spotActions from '../../store/spots';
-// import './Navigation.css'
+import './SpotList.css'
 
 function SpotList({ current }) {
   const dispatch = useDispatch();
@@ -14,7 +14,6 @@ function SpotList({ current }) {
   }, [dispatch]);
 
   const spots = useSelector(state => state.spots.spots);
-  console.log(spots);
 
   return (
     <div className='grid'>

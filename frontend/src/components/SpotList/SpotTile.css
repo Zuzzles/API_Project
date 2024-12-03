@@ -1,0 +1,9 @@
+.img {
+    display: flex;
+    object-fit: contain;
+}
+
+img {
+    width: 100px;
+    height: 100px;
+}

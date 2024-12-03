@@ -19,13 +19,6 @@ const postSpot = (spot) => {
   };
 };
 
-const editSpot = (spot) => {
-  return {
-    type: EDIT_SPOT,
-    payload: spot
-  };
-};
-
 const removeSpot = () => {
   return {
     type: REMOVE_SPOT
@@ -39,29 +32,33 @@ export const getAllSpots = () => async (dispatch) => {
   return response;
 };
 
-export const getSpotById = ({ spotId }) => async (dispatch) => {
-  const response = await csrfFetch(`/api/${spotId}`);
+export const getSpotById = (spotId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}`);
   const data = await response.json();
-  console.log(data);
+  dispatch(postSpot(data));
+  return response;
 }
 
-export const signup = (user) => async (dispatch) => {
-  const { username, firstName, lastName, email, password } = user;
-  const response = await csrfFetch("/api/users", {
+export const createNewSpot = (spot) => async (dispatch) => {
+  const { address, city, state, country, lat, lng, name, description, price } = spot;
+  const response = await csrfFetch("/api/spots", {
     method: "POST",
     body: JSON.stringify({
-      username,
-      firstName,
-      lastName,
-      email,
-      password
+      address, 
+      city, 
+      state, 
+      country, 
+      lat, 
+      lng, 
+      name, 
+      description, 
+      price
     })
   });
   const data = await response.json();
-  dispatch(setUser(data.user));
+  dispatch(postSpot(data.spot));
   return response;
 };
-
 
 const initialState = { spots: null };
 
@@ -69,6 +66,8 @@ const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_SPOTS:
       return { ...state, spots: action.payload };
+    case POST_SPOT:
+      return { ...state, spot: action.payload };
     default:
       return state;
   }
