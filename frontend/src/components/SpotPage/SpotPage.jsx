@@ -10,6 +10,11 @@ import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import ReviewFormModal from '../ReviewFormModal/ReviewFormModal';
 import DeleteReviewModal from '../DeleteReviewModal/DeleteReviewModal';
 
+// TODO: CSS styling
+// TODO: images
+// TODO: review vs reviews
+// TODO: Post review rules
+
 function SpotPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -44,7 +49,7 @@ function SpotPage() {
                     ):(
                       <div>
                         <FaStar />
-                        <span> {`${spot?.avgStarRating} • ${spot?.numReviews} reviews`}</span>
+                        <span> {`${spot?.avgStarRating.toFixed(1)} • ${spot?.numReviews} reviews`}</span>
                       </div>
                     )}
                 </div>
@@ -67,14 +72,14 @@ function SpotPage() {
             <div>
               <div>
                 <FaStar />
-                <span> {`${spot?.avgStarRating} • ${spot?.numReviews} reviews`}</span>
+                <span> {`${spot?.avgStarRating.toFixed(1)} • ${spot?.numReviews} reviews`}</span>
               </div>
               {reviews?.toReversed().map((review) => (
                 <div key={review.id}>
                   <h4>{review.User.firstName}</h4>
                   <span>{`${months[new Date(review.updatedAt).getMonth()]} ${new Date(review.updatedAt).getFullYear()}`}</span>
                   <p>{review.review}</p>
-                  {sessionUser.id === review.User.id ? (
+                  {sessionUser?.id === review.User.id ? (
                     <OpenModalButton 
                       className='button'
                       buttonText="Delete"

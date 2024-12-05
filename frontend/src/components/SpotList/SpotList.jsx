@@ -7,6 +7,8 @@ import './SpotList.css'
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import DeleteSpotModal from '../DeleteSpotModal/DeleteSpotModal';
 
+// TODO: create spots link when no spots
+
 function SpotList({ current }) {
   const dispatch = useDispatch();
   const spots = useSelector(state => state.spots.spots);

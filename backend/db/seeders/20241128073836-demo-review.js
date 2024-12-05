@@ -29,6 +29,12 @@ module.exports = {
         userId: 1,
         review: 'Rollercoasters are so cool!',
         stars: 5
+      },
+      {
+        spotId: 3,
+        userId: 3,
+        review: "I've seen better",
+        review: 2
       }
     ], { validate: true });
   },

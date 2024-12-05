@@ -2,8 +2,6 @@ import { Link } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa';
 import './SpotTile.css'
 
-// TODO: make review number a decimal
-
 function SpotTile({ spot }) {
 
   return (
@@ -22,7 +20,7 @@ function SpotTile({ spot }) {
               ) : (
                 <div>
                   <FaStar />
-                  <span> {spot.avgRating}</span>
+                  <span> {spot.avgRating.toFixed(1)}</span>
                 </div>
               )}
             </div>
