@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as spotsActions from '../../store/spots';
 import { useDispatch } from 'react-redux';
@@ -11,15 +11,17 @@ import './SpotForm.css';
 // TODO: navigate to detail page after submit
 
 
-function SpotForm({ spot = null, edit }) {
+function SpotForm({ spot, edit }) {
+  console.log(spot);
+  console.log(edit);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [address, setAddress] = useState(edit ? (spot?.address) : "");
   const [city, setCity] = useState(edit ? (spot?.city) : "");
   const [state, setState] = useState(edit ? (spot?.state) : "");
   const [country, setCountry] = useState(edit ? (spot?.country) : "");
-  const [lat, setLat] = useState("");
-  const [lng, setLng] = useState("");
+  const [lat, setLat] = useState(edit ? (spot?.lat): "");
+  const [lng, setLng] = useState(edit ? (spot?.lng): "");
   const [name, setName] = useState(edit ? (spot?.name) : "");
   const [description, setDescription] = useState(edit ? (spot?.description) : "");
   const [price, setPrice] = useState(edit ? (spot?.price) : "");
@@ -27,11 +29,25 @@ function SpotForm({ spot = null, edit }) {
 
   const spotFunction = (edit ? spotsActions.editSpot : spotsActions.createNewSpot);
 
+  useEffect(() => {
+    if (spot) {
+      setAddress(spot.address);
+      setCity(spot.city);
+      setState(spot.state);
+      setCountry(spot.country);
+      setLat(spot.lat);
+      setLng(spot.lng);
+      setName(spot.name);
+      setDescription(spot.description);
+      setPrice(spot.price);
+    }
+  },[setAddress, setCity, setState, setCountry, setLat, setLng, setName, setDescription, setPrice, spot])
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
     return dispatch(spotFunction({ id: spot?.id, address, city, state, country, lat, lng, name, description, price }))
-      .then(() => navigate('/')).catch(async (res) => {
+      .then(() => navigate(`/spots/${spot?.id}`)).catch(async (res) => {
         const data = await res.json();
         if (data?.errors) setErrors(data.errors);
       }

@@ -1,12 +1,12 @@
 #modal {
-    position: absolute;
-    float: left;
-    top: 50%;
-    left: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  position: absolute;
+  float: left;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
   
 #modal-background {
   position: fixed;
