@@ -7,3 +7,12 @@
     height: auto;
     width: auto\9;
 }
+
+.add-stars {
+    display: flex;
+    justify-content: space-between;
+}
+
+span {
+    text-decoration: none;
+}

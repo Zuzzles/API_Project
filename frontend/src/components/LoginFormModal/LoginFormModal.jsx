@@ -18,10 +18,12 @@ function LoginFormModal() {
       .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
-        if (data?.errors) setErrors(data.errors);
+        if (data?.message) setErrors(data.message);
       }
     );
   };
+
+  //TODO: need error message and clear errors
 
   const demoUser = () => {
     setCredential('Demo-lition');
@@ -30,29 +32,29 @@ function LoginFormModal() {
 
   return (
     <>
-      <h1>Log In</h1>
+      <h2>Log In</h2>
       <form onSubmit={handleSubmit}>
         <label>
-          Username or Email
           <input
             type="text"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
+            placeholder='Username or Email'
             required
           />
         </label>
         <label>
-          Password
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder='Password'
             required
           />
         </label>
-        {errors.credential && <p>{errors.credential}</p>}
-        <button type="submit">Log In</button>
-        <button onClick={() => demoUser()} type="submit">Demo User</button>
+        {errors && <p className='error'>{errors}</p>}
+        <button className='login' disabled={password.length < 6 || credential.length < 4} type="submit">Log In</button>
+        <button className='demo' onClick={() => demoUser()} type="submit">Demo User</button>
       </form>
     </>
   );
