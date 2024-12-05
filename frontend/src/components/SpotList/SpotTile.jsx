@@ -1,29 +1,34 @@
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa';
 import './SpotTile.css'
+
+// TODO: make review number a decimal
 
 function SpotTile({ spot }) {
 
   return (
-    <NavLink to={`/spots/${spot.id}`} className='spot-tile'>
+    <Link title={spot.name} to={`/spots/${spot.id}`} className='spot-tile'>
         <div className='img'>
-          <img className='spot-image' src ="../../../images/no-image-available.jpg" alt="No Image Available"/>
+          <img className='spot-image' src ="/images/no-image-available.jpg" alt="No Image Available"/>
         </div>
         <div>
-            <div>
+            <div className='add-stars'>
               <span>{spot.city}, {spot.state}</span>
               {spot.avgRating === 'No Reviews' ? (
-                <span>{spot.avgRating}</span>
-              ) : (
-                <>
+                <div>
                   <FaStar />
-                  <span>{spot.avgRating}</span>
-                </>
+                  <span> New</span>
+                </div>
+              ) : (
+                <div>
+                  <FaStar />
+                  <span> {spot.avgRating}</span>
+                </div>
               )}
             </div>
             <div>${spot.price} per night</div>
         </div>
-    </NavLink>
+    </Link>
   );
 }
 

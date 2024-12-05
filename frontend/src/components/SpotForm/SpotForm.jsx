@@ -1,28 +1,34 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as spotsActions from '../../store/spots';
-import { useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 // import { useModal } from '../../context/Modal';
 // import './LoginForm.css';
 
-function SpotForm() {
+// TODO: fix error stuff
+
+
+function SpotForm({ spot = null, edit }) {
   const dispatch = useDispatch();
-  // const sessionUser = useSelector(state => state.session.user);
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [country, setCountry] = useState("");
+  const navigate = useNavigate();
+  const [address, setAddress] = useState(edit ? (spot?.address) : "");
+  const [city, setCity] = useState(edit ? (spot?.city) : "");
+  const [state, setState] = useState(edit ? (spot?.state) : "");
+  const [country, setCountry] = useState(edit ? (spot?.country) : "");
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
+  const [name, setName] = useState(edit ? (spot?.name) : "");
+  const [description, setDescription] = useState(edit ? (spot?.description) : "");
+  const [price, setPrice] = useState(edit ? (spot?.price) : "");
   const [errors, setErrors] = useState({});
+
+  const spotFunction = (edit ? spotsActions.editSpot : spotsActions.createNewSpot);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(spotsActions.createNewSpot({ address, city, state, country, lat, lng, name, description, price }))
-      .catch(async (res) => {
+    return dispatch(spotFunction({ id: spot?.id, address, city, state, country, lat, lng, name, description, price }))
+      .then(() => navigate('/')).catch(async (res) => {
         const data = await res.json();
         if (data?.errors) setErrors(data.errors);
       }
@@ -31,7 +37,7 @@ function SpotForm() {
 
   return (
     <>
-      <h1>Create a new Spot</h1>
+      {edit ? (<h1>Update your Spot</h1>) : (<h1>Create a new Spot</h1>)}
       <form onSubmit={handleSubmit}>
         <label>
           Country
@@ -39,6 +45,7 @@ function SpotForm() {
             type="text"
             value={country}
             onChange={(e) => setCountry(e.target.value)}
+            placeholder='Country'
             required
           />
         </label>
@@ -48,6 +55,7 @@ function SpotForm() {
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
+            placeholder='Street Address'
             required
           />
         </label>
@@ -57,6 +65,7 @@ function SpotForm() {
             type="text"
             value={city}
             onChange={(e) => setCity(e.target.value)}
+            placeholder='City'
             required
           />
         </label>
@@ -64,8 +73,9 @@ function SpotForm() {
           State
           <input
             type="text"
-            value={address}
+            value={state}
             onChange={(e) => setState(e.target.value)}
+            placeholder='State'
             required
           />
         </label>
@@ -75,6 +85,7 @@ function SpotForm() {
             type="number"
             value={lat}
             onChange={(e) => setLat(e.target.value)}
+            placeholder='Latitude'
           />
         </label>
         <label>
@@ -83,6 +94,7 @@ function SpotForm() {
             type="number"
             value={lng}
             onChange={(e) => setLng(e.target.value)}
+            placeholder='Longitude'
           />
         </label>
         <label>
@@ -91,6 +103,7 @@ function SpotForm() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            placeholder='Name of your Spot'
             required
           />
         </label>
@@ -100,6 +113,7 @@ function SpotForm() {
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            placeholder='Description'
             required
           />
         </label>
@@ -109,11 +123,12 @@ function SpotForm() {
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+            placeholder='Price'
             required
           />
         </label>
         {errors.credential && <p>{errors.credential}</p>}
-        <button type="submit">Create Spot</button>
+        <button type="submit">{edit ? 'Update Spot' : 'Create Spot'}</button>
       </form>
     </>
   );

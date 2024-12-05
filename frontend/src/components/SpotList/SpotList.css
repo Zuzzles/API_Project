@@ -7,7 +7,14 @@
 
 .grid-tile {
     display: flex;
+    flex-direction: column;
     max-width: 400px;
+}
+
+.current-button {
+    display: flex;
+    justify-content: space-around;
+    margin: 15px 0px
 }
 
 @media screen and (max-width: 450px) {

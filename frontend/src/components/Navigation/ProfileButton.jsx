@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { FaUserCircle, FaBars } from 'react-icons/fa';
@@ -5,6 +6,9 @@ import * as sessionActions from '../../store/session';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal';
+
+// TODO: Fix the user button to be drop down down without changing the nav div size
+// TODO: center buttons for dropdown
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -48,18 +52,21 @@ function ProfileButton({ user }) {
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
-          <>
-            <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
+          <div className='dropdown'>
+            <li>{`Hello, ${user.firstName}`}</li>
             <li>{user.email}</li>
-            <li>
-              <button onClick={logout}>Log Out</button>
+            <li className='manage'>
+              <NavLink className='manage-link' to="/spots/current">Manage Spots</NavLink>
             </li>
-          </>
+            <li>
+              <button className='button' onClick={logout}>Log Out</button>
+            </li>
+          </div>
         ) : (
-          <>
+          <div className='dropdown'>
             <li>
               <OpenModalButton
+                className='button' 
                 buttonText="Log In"
                 onButtonClick={closeMenu}
                 modalComponent={<LoginFormModal />}
@@ -67,12 +74,13 @@ function ProfileButton({ user }) {
             </li>
             <li>
               <OpenModalButton
+                className='button'
                 buttonText="Sign Up"
                 onButtonClick={closeMenu}
                 modalComponent={<SignupFormModal />}
               />
             </li>
-          </>
+          </div>
         )}
       </ul>
     </>
