@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import * as spotsActions from '../../store/spots';
 import { useDispatch } from 'react-redux';
 // import { useModal } from '../../context/Modal';
-// import './LoginForm.css';
+import './SpotForm.css';
 
-// TODO: fix error stuff
+// TODO: CSS and extra text
+// TODO: add errors
+// TODO: add images
+// TODO: navigate to detail page after submit
 
 
 function SpotForm({ spot = null, edit }) {
@@ -36,31 +39,39 @@ function SpotForm({ spot = null, edit }) {
   };
 
   return (
-    <>
-      {edit ? (<h1>Update your Spot</h1>) : (<h1>Create a new Spot</h1>)}
+    <div className='spot-form'>
+      {edit ? (<h2 className='spot-form-title'>Update your Spot</h2>) : (<h2 className='spot-form-title'>Create a new Spot</h2>)}
       <form onSubmit={handleSubmit}>
-        <label>
-          Country
+        <label className='spot-form-label'>
+          <div className='title-errors'>
+            Country 
+            {errors.country && <p className='error-box'>{errors.country}</p>}
+          </div>
           <input
             type="text"
             value={country}
             onChange={(e) => setCountry(e.target.value)}
             placeholder='Country'
-            required
+            
           />
         </label>
-        <label>
-          Street Address
+        <label className='spot-form-label'>
+          <div className='title-errors'>
+            Street Address 
+            {errors.address && <p className='error'>{errors.address}</p>}
+          </div>
           <input
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             placeholder='Street Address'
-            required
           />
         </label>
-        <label>
-          City
+        <label className='spot-form-label'>
+          <div className='title-errors'>
+            City 
+            {errors.city && <p className='error'>{errors.city}</p>}
+          </div>
           <input
             type="text"
             value={city}
@@ -69,8 +80,11 @@ function SpotForm({ spot = null, edit }) {
             required
           />
         </label>
-        <label>
-          State
+        <label className='spot-form-label'>
+          <div className='title-errors'>
+            State
+            {errors.state && <p className='error'>{errors.state}</p>}
+          </div>
           <input
             type="text"
             value={state}
@@ -79,8 +93,11 @@ function SpotForm({ spot = null, edit }) {
             required
           />
         </label>
-        <label>
-          Latitude
+        <label className='spot-form-label'>
+          <div className='title-errors'>
+            Latitude 
+            {errors.lat && <p className='error'>{errors.lat}</p>}
+          </div>
           <input
             type="number"
             value={lat}
@@ -88,8 +105,11 @@ function SpotForm({ spot = null, edit }) {
             placeholder='Latitude'
           />
         </label>
-        <label>
-          Longitude
+        <label className='spot-form-label'>
+          <div className='title-errors'>
+            Longitude 
+            {errors.lng && <p className='error'>{errors.address}</p>}
+          </div>
           <input
             type="number"
             value={lng}
@@ -130,7 +150,7 @@ function SpotForm({ spot = null, edit }) {
         {errors.credential && <p>{errors.credential}</p>}
         <button type="submit">{edit ? 'Update Spot' : 'Create Spot'}</button>
       </form>
-    </>
+    </div>
   );
 }
 

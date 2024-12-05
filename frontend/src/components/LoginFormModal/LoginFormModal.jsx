@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import './LoginForm.css';
 
+// TODO: format errors
+
 function LoginFormModal() {
   const dispatch = useDispatch();
   const [credential, setCredential] = useState("");
@@ -22,8 +24,6 @@ function LoginFormModal() {
       }
     );
   };
-
-  //TODO: need error message and clear errors
 
   const demoUser = () => {
     setCredential('Demo-lition');

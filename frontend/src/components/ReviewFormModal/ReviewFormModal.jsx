@@ -5,7 +5,9 @@ import * as reviewsActions from '../../store/reviews';
 import * as spotsActions from '../../store/spots'
 //import './SignupForm.css';
 
-// TODO: Fix error popups
+// TODO: CSS styling
+// TODO: Submit button disable criteria
+// TODO: server error occurance
 
 function ReviewFormModal({ spotId }) {
   const dispatch = useDispatch();
@@ -39,7 +41,7 @@ function ReviewFormModal({ spotId }) {
     <>
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit} className='review-form'>
-        {errors.review && <p>{errors.review}</p>}
+        {errors.message && <p>{errors.message}</p>}
         <label>
           <input
             type="text"
