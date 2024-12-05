@@ -96,7 +96,7 @@ export const deleteSpot = (spotId) => async (dispatch) => {
   return response;
 }
 
-const initialState = { spots: null };
+const initialState = { spots: null, spot: null };
 
 const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -105,8 +105,7 @@ const spotsReducer = (state = initialState, action) => {
     case POST_SPOT:
       return { ...state, spot: action.payload };
     case REMOVE_SPOT:
-      delete state.spots[action.payload];
-      return state;
+      return {...state, spots: state.spots.filter((spot) => spot.id !== action.payload)};
     default:
       return state;
   }

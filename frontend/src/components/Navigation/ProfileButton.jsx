@@ -7,7 +7,6 @@ import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal';
 
-// TODO: Fix the user button to be drop down down without changing the nav div size
 // TODO: center buttons for dropdown
 
 function ProfileButton({ user }) {
