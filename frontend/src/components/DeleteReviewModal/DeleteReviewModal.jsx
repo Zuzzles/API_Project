@@ -3,9 +3,7 @@ import * as spotsActions from '../../store/spots';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
-// import './LoginForm.css';
-
-// TODO: fix error handling
+import './DeleteReview.css';
 
 function DeleteReviewModal({ reviewId, spotId }) {
   const dispatch = useDispatch();
@@ -28,12 +26,12 @@ function DeleteReviewModal({ reviewId, spotId }) {
   console.log(errors)
 
   return (
-    <>
-      <h2>Confirm Delete</h2>
-      <span>Are you sure you want to delete this review?</span>
+    <div className='review-delete'>
+      <h2 className='review-delete-title'>Confirm Delete</h2>
+      <span className='review-q'>Are you sure you want to delete this review?</span>
       <button className='yes-del'onClick={handleClick}>Yes (Delete Review)</button>
       <button className='no-del' onClick={closeModal}>No (Keep Review)</button>
-    </>
+    </div>
   );
 }
 

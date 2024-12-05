@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import SpotTile from './SpotTile';
@@ -25,7 +25,7 @@ function SpotList({ current }) {
           {current ? (
             <div className='current-button'>
                 <button>
-                  <NavLink to={`/spots/${spot.id}/edit`}>Update</NavLink>
+                  <Link to={`/spots/${spot.id}/edit`}>Update</Link>
                 </button>
                 <OpenModalButton 
                   className='button'

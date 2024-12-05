@@ -2,9 +2,7 @@ import * as spotsActions from '../../store/spots';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
-// import './LoginForm.css';
-
-// TODO: fix error handling
+import './DeleteSpot.css';
 
 function DeleteSpotModal({ spotId }) {
   const dispatch = useDispatch();
@@ -27,8 +25,8 @@ function DeleteSpotModal({ spotId }) {
 
   return (
     <>
-      <h2>Confirm Delete</h2>
-      <span>Are you sure you want to remove this spot from the listings?</span>
+      <h2 className='spot-delete-title'>Confirm Delete</h2>
+      <span className='spot-delete-q'>Are you sure you want to remove this spot from the listings?</span>
       <button className='yes-del'onClick={handleClick}>Yes (Delete Spot)</button>
       <button className='no-del' onClick={closeModal}>No (Keep Spot)</button>
     </>

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import * as reviewsActions from '../../store/reviews';
 import * as spotsActions from '../../store/spots'
-//import './SignupForm.css';
+import './ReviewForm.css';
 
 // TODO: CSS styling
 // TODO: Submit button disable criteria
@@ -39,7 +39,7 @@ function ReviewFormModal({ spotId }) {
 
   return (
     <>
-      <h2>Sign Up</h2>
+      <h2 className='review-form-title'>How was your stay?</h2>
       <form onSubmit={handleSubmit} className='review-form'>
         {errors.message && <p>{errors.message}</p>}
         <label>
